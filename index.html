@@ -46,16 +46,67 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+
+        @keyframes hover-gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
         /* --- General Card Styling --- */
         .card {
             opacity: 0;
             animation: cardEnter 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            position: relative;
+            z-index: 1;
             border: 1px solid rgba(255, 255, 255, 0.1);
             background-color: rgba(17, 24, 39, 0.7);
             backdrop-filter: blur(12px);
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                        background-color 0.6s ease,
+                        box-shadow 0.6s ease;
         }
 
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: inherit;
+            z-index: -1;
+            background-image: linear-gradient(45deg, #f59e0b, #ef4444, #3b82f6, #14b8a6);
+            background-size: 400% 400%;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .card:hover {
+            transform: scale(1.03) translateY(-8px);
+            background-color: transparent;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+            animation: hover-gradient-animation 8s ease infinite;
+        }
+
+        .card:hover h2,
+        .card:hover h3,
+        .card:hover h4,
+        .card:hover p,
+        .card:hover ul,
+        .card:hover strong {
+            color: #fff;
+            transition: color 0.6s ease;
+        }
+        
+        .card:hover .tag-gradient {
+            color: #0c2a3a;
+            background-image: none;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
         .flow-item, .io-connector {
             opacity: 0;
             animation: item-enter 0.5s ease-out forwards;
@@ -68,9 +119,9 @@
 
         .tooltip {
             position: absolute;
-            bottom: calc(100% + 12px);
-            left: 50%;
-            transform: translateX(-50%) translateY(10px);
+            top: 50%;
+            left: calc(100% + 12px);
+            transform: translateY(-50%) translateX(-10px);
             width: 320px;
             background-color: #111827; /* bg-gray-900 */
             color: #d1d5db; /* text-gray-300 */
@@ -89,18 +140,18 @@
         .tooltip::after {
             content: '';
             position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -8px;
+            top: 50%;
+            right: 100%;
+            margin-top: -8px;
             border-width: 8px;
             border-style: solid;
-            border-color: #111827 transparent transparent transparent;
+            border-color: transparent #111827 transparent transparent;
         }
 
         .flow-card:hover .tooltip {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(-50%) translateX(0);
         }
     </style>
 </head>
@@ -241,10 +292,11 @@
             }
         });
 
-        function createRiskItem(item, index, offset) {
+        function createRiskItem(item, index) {
             const riskItem = document.createElement('div');
+            // We add the .card class here for the hover effect
             riskItem.className = `card rounded-lg p-5 border-l-4 ${item.borderColor} flex items-start`;
-            riskItem.style.animationDelay = `${(offset + index) * 100}ms`;
+            riskItem.style.animationDelay = `${(feasibilityData.length * 200) + (index * 100)}ms`;
             riskItem.innerHTML = `
                 <div class="flex-1">
                     <div class="flex items-center justify-between">
@@ -260,12 +312,12 @@
 
         const technicalRisksContainer = document.getElementById('technical-risks-container');
         technicalRisksData.forEach((item, index) => {
-            technicalRisksContainer.appendChild(createRiskItem(item, index, 0));
+            technicalRisksContainer.appendChild(createRiskItem(item, index));
         });
         
         const operationalRisksContainer = document.getElementById('operational-risks-container');
         operationalRisksData.forEach((item, index) => {
-            operationalRisksContainer.appendChild(createRiskItem(item, index, technicalRisksData.length));
+            operationalRisksContainer.appendChild(createRiskItem(item, index + technicalRisksData.length));
         });
     </script>
 </body>
