@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Facial Simulation & Visualization Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            background-image: radial-gradient(circle at top right, rgba(12, 74, 110, 0.3), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(13, 98, 98, 0.2), transparent 50%);
+        }
+
+        /* --- Gradient Tag Colors --- */
+        .tag-gradient {
+            background-size: 200% 200%;
+            animation: gradient-animation 4s ease infinite;
+            transition: all 0.6s ease;
+        }
+
+        .severity-high { background-image: linear-gradient(to right, #7f1d1d, #450a0a); color: #fecaca; }
+        .severity-medium-high { background-image: linear-gradient(to right, #78350f, #422006); color: #fde68a; }
+        .severity-medium { background-image: linear-gradient(to right, #854d0e, #4a2e04); color: #fef08a; }
+        
+        .feasibility-high { background-image: linear-gradient(to right, #064e3b, #062f1e); color: #d1fae5; }
+        .feasibility-medium-high { background-image: linear-gradient(to right, #312e81, #1e1b4b); color: #e0e7ff; }
+        .feasibility-medium { background-image: linear-gradient(to right, #854d0e, #4a2e04); color: #fef08a; }
+        .feasibility-medium-low { background-image: linear-gradient(to right, #78350f, #422006); color: #fde68a; }
+
+        /* --- Animations --- */
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        @keyframes item-enter {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* --- General Card Styling --- */
+        .card {
+            opacity: 0;
+            animation: cardEnter 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+        }
+
+        .flow-item, .io-connector {
+            opacity: 0;
+            animation: item-enter 0.5s ease-out forwards;
+        }
+
+        /* --- Tooltip Styling --- */
+        .flow-card {
+            position: relative;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            width: 320px;
+            background-color: #111827; /* bg-gray-900 */
+            color: #d1d5db; /* text-gray-300 */
+            padding: 1rem; /* p-4 */
+            border-radius: 0.75rem; /* rounded-xl */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            z-index: 30;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            text-align: left;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -8px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: #111827 transparent transparent transparent;
+        }
+
+        .flow-card:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <!-- Header -->
+    <header class="bg-transparent sticky top-0 z-20 backdrop-blur-sm bg-black/30">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-extrabold leading-tight text-white tracking-tight">3D Facial Simulation & Visualization Platform</h1>
+        </div>
+    </header>
+
+    <main class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Project Overview -->
+            <div class="mb-16 card p-8 rounded-xl" style="animation-delay: 100ms;">
+                <h2 class="text-2xl font-bold text-white mb-4">🎯 Primary Goal</h2>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    To build an AI-driven 3D facial reconstruction and simulation platform that enables users—particularly clinics and cosmetic practitioners—to visualize personalized surgical outcomes in three dimensions. This solution should provide realistic, interactive, and exportable 3D face models that simulate various cosmetic procedures such as rhinoplasty, chin projection, and lip enhancement.
+                </p>
+                <h2 class="text-2xl font-bold text-white mb-4">🔍 Purpose</h2>
+                <p class="text-gray-300 leading-relaxed">
+                    This platform is designed to:
+                </p>
+                <ul class="list-disc list-inside text-gray-300 space-y-2 mt-2">
+                    <li>Provide real-time 3D visual feedback for elective facial cosmetic surgeries.</li>
+                    <li>Empower clinicians with tools to manipulate, compare, and explain surgical options using geometry-aware face models.</li>
+                    <li>Deliver a modern, professional-grade tool for pre-surgical consultation, client onboarding, and trust-building through data visualization.</li>
+                </ul>
+            </div>
+
+            <!-- Feasibility Assessment Section -->
+            <div class="mb-20">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">Feasibility & Process Flow</h2>
+                <div id="feasibility-container" class="max-w-3xl mx-auto">
+                    <!-- Process steps will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Risk Assessment Section -->
+            <div>
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">Risk Assessment</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
+                    <div class="mb-8 lg:mb-0">
+                        <h3 class="text-xl font-semibold text-gray-200 mb-6">Technical Risks</h3>
+                        <div id="technical-risks-container" class="space-y-6"></div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-200 mb-6">Operational Risks</h3>
+                         <div id="operational-risks-container" class="space-y-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-transparent mt-16">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500 border-t border-gray-800">
+            <p>Generated from document: Feasibility and Risk of 3D version (1).docx</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA ---
+        const feasibilityData = [
+            { stage: 1, title: 'Image Input & Landmark Detection', level: 'High', explanation: 'The user provides a facial photo, from which key facial points are automatically identified to guide the 3D model.', notes: 'DECA/face-alignment already do this; needs proper pre-processing & user UX.', mitigation: 'Use face-alignment fallback if DECA fails. Add image validation filters.', output: '2D Image + Facial Landmarks', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1-1m6 6H4a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2z" /></svg>' },
+            { stage: 2, title: '3D Reconstruction', level: 'Medium-High', explanation: 'A base 3D facial mesh is generated from the 2D image and its landmarks, forming the foundation for edits.', notes: 'DECA works well, but adapting to profile + frontal may require custom logic.', mitigation: 'Begin with frontal-only DECA setup.', output: 'Base 3D Mesh', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16V8a2 2 0 00-1-1.732l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.732l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" /></svg>' },
+            { stage: 3, title: 'Texture Mapping & UVs', level: 'Medium', explanation: 'The color and detail from the original photo are projected onto the 3D mesh to provide a realistic appearance.', notes: 'DECA produces texture maps, but high realism mapping requires tuning UV alignment.', mitigation: 'Use default DECA texture as baseline; allow manual lighting controls.', output: 'Textured 3D Mesh', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" /></svg>' },
+            { stage: 4, title: 'Prompt-based Morphing', level: 'Medium-Low', explanation: 'The 3D model is intelligently edited based on user text commands (e.g., "make nose smaller") for desired changes.', notes: 'Models exist but aren’t clinically accurate out-of-the-box.', mitigation: 'Use prompt-driven edits as MVP. Fallback to static morph targets & manual sliders.', output: 'Morphed 3D Mesh', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>' },
+            { stage: 5, title: 'Viewer Integration', level: 'High', explanation: 'The final, morphed 3D model is displayed in an interactive viewer where it can be rotated, zoomed, and inspected.', notes: 'Straightforward; Three.js is battle-tested. Exporting to OBJ/GLTF is possible.', mitigation: 'If rendering fails, provide fallback image snapshots or simplified viewer.', output: 'Interactive 3D View', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>' },
+            { stage: 6, title: 'Measurements & Reporting', level: 'Medium', explanation: 'Key distances and angles on the 3D model are calculated and presented in a final report for the user.', notes: 'Depends on consistent landmark positioning; may need custom metrics code.', mitigation: 'Add UI warnings for low confidence. Allow mesh export for manual measurement.', output: 'Measurement Data & Report', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l-6-2m6 2l-3 1m-3-1l-3 9" /></svg>' },
+        ];
+
+        const technicalRisksData = [
+            { title: 'Python version mismatches', severity: 'High', notes: 'DECA was built for Py 3.7. Running on 3.11 requires patching.', mitigation: 'Use Docker or Conda env to pin dependencies. Provide backup build.', borderColor: 'border-red-500/50' },
+            { title: 'Dependency drift', severity: 'Medium', notes: 'Updating one library can break the whole DECA chain.', mitigation: 'Lock all dependencies with requirements.txt or Conda env.', borderColor: 'border-yellow-500/50' },
+            { title: 'Low-quality inputs', severity: 'Medium-High', notes: 'Will fail landmark detection; validation filters are needed.', mitigation: 'Implement image quality checker. Prompt user to re-upload.', borderColor: 'border-orange-400/50' },
+            { title: 'Imprecise Edits', severity: 'High', notes: 'Models aren’t clinically trained; can be anatomically incorrect.', mitigation: 'Add manual override sliders. Label results as "visual estimate."', borderColor: 'border-red-500/50' }
+        ];
+
+        const operationalRisksData = [
+            { title: 'Mismatch in Expectations', severity: 'High', notes: 'Clinicians need parameterized, measurable changes.', mitigation: 'Include parameter adjustment UI. Allow export to CAD.', borderColor: 'border-red-500/50' },
+            { title: 'No ground-truth data', severity: 'High', notes: 'Cannot train reliable models without paired 3D scans.', mitigation: 'Use simulated data for bootstrapping. Add manual presets.', borderColor: 'border-red-500/50' },
+            { title: 'Model integration', severity: 'Medium', notes: 'Getting modules to talk cleanly is effort (Py → JS).', mitigation: 'Modularize with clear APIs. Use file I/O as fallback.', borderColor: 'border-yellow-500/50' }
+        ];
+
+        // --- RENDER FUNCTIONS ---
+        function getFeasibilityClass(level) { return `feasibility-${level.toLowerCase().replace('-', '')}`; }
+        function getSeverityClass(severity) { return `severity-${severity.toLowerCase().replace('-', '')}`; }
+
+        const feasibilityContainer = document.getElementById('feasibility-container');
+        let animationDelay = 200;
+
+        feasibilityData.forEach((item, index) => {
+            const stage = document.createElement('div');
+            stage.className = 'flow-item';
+            stage.style.animationDelay = `${animationDelay}ms`;
+            animationDelay += 100;
+
+            stage.innerHTML = `
+                <div class="flow-card rounded-xl p-6 border border-white/10 bg-gray-900/50 backdrop-blur-sm transition-all duration-300 hover:bg-gray-900/80 hover:border-cyan-400/50 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0 h-16 w-16 rounded-full border-2 border-white/10 bg-gray-800 flex items-center justify-center text-cyan-400 mr-4">
+                            ${item.icon}
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">${item.stage}. ${item.title}</h3>
+                            <span class="tag-gradient ${getFeasibilityClass(item.level)} text-xs font-bold mt-1 inline-block px-3 py-1 rounded-full">${item.level} Feasibility</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 border-l-2 border-cyan-400/30 pl-3">${item.explanation}</p>
+                    
+                    <!-- Tooltip -->
+                    <div class="tooltip">
+                        <p class="text-sm text-gray-300 mb-2"><strong class="font-semibold text-white">Notes:</strong> ${item.notes}</p>
+                        <p class="text-sm text-gray-300"><strong class="font-semibold text-white">Mitigation:</strong> ${item.mitigation}</p>
+                    </div>
+                </div>
+            `;
+            feasibilityContainer.appendChild(stage);
+
+            if (index < feasibilityData.length - 1) {
+                const connector = document.createElement('div');
+                connector.className = 'io-connector my-4 flex justify-center items-center';
+                connector.style.animationDelay = `${animationDelay}ms`;
+                animationDelay += 100;
+
+                connector.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Output</div>
+                        <div class="font-semibold text-cyan-400 bg-cyan-900/40 rounded-md px-3 py-1 my-1">${item.output}</div>
+                        <div class="text-3xl text-gray-600">↓</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Input</div>
+                    </div>
+                `;
+                feasibilityContainer.appendChild(connector);
+            }
+        });
+
+        function createRiskItem(item, index, offset) {
+            const riskItem = document.createElement('div');
+            riskItem.className = `card rounded-lg p-5 border-l-4 ${item.borderColor} flex items-start`;
+            riskItem.style.animationDelay = `${(offset + index) * 100}ms`;
+            riskItem.innerHTML = `
+                <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-white text-md">${item.title}</h4>
+                        <span class="tag-gradient ${getSeverityClass(item.severity)} text-xs font-bold px-3 py-1 rounded-full ml-4 whitespace-nowrap">${item.severity} Risk</span>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-3"><strong class="font-semibold text-gray-300">Notes:</strong> ${item.notes}</p>
+                    <p class="text-sm text-gray-400 mt-2"><strong class="font-semibold text-gray-300">Mitigation:</strong> ${item.mitigation}</p>
+                </div>
+            `;
+            return riskItem;
+        }
+
+        const technicalRisksContainer = document.getElementById('technical-risks-container');
+        technicalRisksData.forEach((item, index) => {
+            technicalRisksContainer.appendChild(createRiskItem(item, index, 0));
+        });
+        
+        const operationalRisksContainer = document.getElementById('operational-risks-container');
+        operationalRisksData.forEach((item, index) => {
+            operationalRisksContainer.appendChild(createRiskItem(item, index, technicalRisksData.length));
+        });
+    </script>
+</body>
+</html>
